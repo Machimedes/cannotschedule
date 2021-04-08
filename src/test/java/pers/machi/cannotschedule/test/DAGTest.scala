@@ -1,11 +1,20 @@
 package pers.machi.cannotschedule.test
 
-import pers.machi.cannotschedule.dag.{DAG, Edge, Node, NodeSeqGenerator}
+import java.util.concurrent.atomic.AtomicInteger
+
+import pers.machi.cannotschedule.dag.{DAG, Edge, Node}
 
 import scala.collection.immutable.HashSet
 import scala.collection.mutable
 
 object DAGTest {
+
+
+  object NodeSeqGenerator {
+    val seq = new AtomicInteger()
+
+    def generate = new Node(seq.getAndIncrement())
+  }
 
   def main(args: Array[String]): Unit = {
     val n0 = NodeSeqGenerator.generate
@@ -32,8 +41,6 @@ object DAGTest {
     val e8 = Edge(n1, n4)
     val e9 = Edge(n4, n0)
 
-    val d = new DAG[Node, Edge[Node]]()
-
 
     /*    d.addEdge(e1)
         d.addEdge(e2)
@@ -48,7 +55,7 @@ object DAGTest {
         d.addEdge(e5)*/
 
 
-    val ex1 = Edge(n0, n1)
+    val ex1 = Edge(n0, n4)
     val ex2 = Edge(n1, n2)
     val ex3 = Edge(n2, n3)
     val ex4 = Edge(n3, n0)
@@ -58,7 +65,9 @@ object DAGTest {
     //d.buildDAGFromEdges(HashSet(e1, e2, e3, e4, e5, e6, e7, e8, e9))
 
 
-    d.buildDAGFromEdges(HashSet(ex1, ex2, ex3, ex4))
+    val d = new DAG[Node, Edge[Node]](HashSet(ex1, ex2, ex3, ex4),
+      HashSet(n0, n1, n2, n3, n5),
+      HashSet(n3, n9))
 
     d.printDAGInfo
   }
